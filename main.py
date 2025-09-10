@@ -33,11 +33,28 @@ print("data saved to data.json!")
 response = input("Do you want to get a summary of your dreams ?? yes or no ??")
 count = 0
 if response.lower() == "yes":
-    for i in file:
-        count += 1
-        count1 = {"Coun":"count","name":"file"}
-        print(count1)
+    if os.path.exists('data.json'):
+        try:
+            with open('data.json', 'r') as file:
+                data = json.load(file)
+                if not data:
+                    print("No dreams recorded yet.")
+                else:
+                    print("\nSummary of your dreams:")
+                    theme_counts = {}
+                    for entry in data:
+                        theme = entry['themes']
+                        theme_counts[theme] = theme_counts.get(theme, 0) + 1
+                        print(f"Date: {entry['date']}, Theme: {entry['themes']},")
+
+                    print("\nTheme frequency:")
+                    for theme, count in theme_counts.items():
+                        print(f"{theme}: {count} time(s)")
+        except (json.JSONDecodeError, FileNotFoundError):
+            print("Error reading data.json or no dreams recorded.")
+    else:
+        print("No dreams recorded yet.")
 else:
-    print('ok! Have a great day')
+    print('Ok! Have a great day!')
 
 
